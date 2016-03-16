@@ -9,7 +9,7 @@ typedef struct{
 	char *nome;
 } BancoDeDados;
 
-UINT32 searchForDataBase(FILE *dbHeader,char *filenames[]);
+UINT32 searchForDataBase(char **filenames);
 
 void criarBancoDeDados(BancoDeDados *bancoDeDados);
 
