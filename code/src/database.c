@@ -4,32 +4,42 @@
 #include "../include/database.h"
 #include "../include/files.h"
 
-#define MAX_FILENAME_LEN 20
-#define FILE_SEPARATOR ";"
+#define FILE_SEPARATOR_CHAR ';'
+#define FILE_SEPARATOR_STRING ";"
 
 UINT32 searchForDataBase(char **filenames){
-    
+
     char *data;
-    UINT32 dataAmount , filesCounter, i;
-    
-    dataAmount = loadFile(DB_HEADER_NAME, &data);
-    
+    UINT32 dataAmount, i;
+
+    File dbFile;
+    dbFile.name = {DB_HEADER_NAME};
+
+    dataAmount = openFile(&dbFile, &data);
+
     if(dataAmount == 0){
         return 0;
     }
 
-    for(i = 0; i < dataAmount ; i++); 
-        if(data[i] == FILE_SEPARATOR){ /* count files number*/
+    UINT32 filesCounter = 0;
+
+    for(i = 0; i < dataAmount ; i++){
+        if(data[i] == FILE_SEPARATOR_CHAR){ /* count files number*/
             filesCounter++;
         }
-        *(*filenames) = (char*) malloc(MAX_FILENAME_LEN*filesCounter);
-        
+    }
+
+    *filenames = (char*) malloc(MAX_FILENAME_LEN*filesCounter);
+
     char tempName[MAX_FILENAME_LEN];
-    unsigned char j;
-    
-    for(i = 0 ; EOF != scanf("%[^;];", tempName) ;  i++)
-        strcpy(tempName, filename[i])
-           
+
+    for(i = 0; i < filesCounter ; i++){
+        sscanf(data+MAX_FILENAME_LEN*i, "%s", tempName);
+
+        strcpy((*filenames)[MAX_FILENAME_LEN*i], tempName);
+        printf("%s\n", tempName);
+    }
+
     return filesCounter;
 }
 

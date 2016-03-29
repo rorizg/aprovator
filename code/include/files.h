@@ -11,8 +11,19 @@
 #define ERR_FOLDER_AD   1     /* Access denied error */
 #define ERR_FOLDER_TL   2     /* File name too long */
 
+#define MAX_FILENAME_LEN 20
+
+typedef struct{
+    char name[MAX_FILENAME_LEN];
+    FILE file;
+}File;
+
 UINT16 createFolder(char* name);
 
-UINT32 loadFile(const char *filename, char **filedata);
+void createFile(File *f);
+
+UINT32 openFile(File *f, char **filedata);
+
+bool saveFile(File *f, char *data, UINT32 length);
 
 #endif // FILES_H

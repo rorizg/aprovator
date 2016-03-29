@@ -4,7 +4,7 @@
 
 #include "../include/files.h"
 
-UINT16 createFolder(char* name){
+UINT16 createFolder(char *name){
     UINT16 mkdirInfo = mkdir(name, S_IFDIR);
 
 	UINT8 out;
@@ -50,16 +50,40 @@ UINT16 createFolder(char* name){
 	return out;
 }
 
-UINT32 loadFile(const char *filename, char **filedata){
+bool createFile(File *f, const char *filename){
+    UINT8 i;
+
+    /* copy file name */
+    for(i = 0; i < MAX_FILENAME_LEN && filename[i] != '\0' ; i++){
+        f->name[i] = filename[i];
+    }
+
+    /* create the file if not exists */
+    FILE *tempFile = fopen(f->name, "w");
+    /* verify if file exists */
+    if(tempFile == NULL)
+        return false;
+
+    fclose(tempFile);
+
+    return true;
+}
+
+UINT32 openFile(File *f, char **filedata){
     UINT32 charCount;
 
-    FILE *file = fopen(filename,"r");
+    FILE tempFile = fopen(f->name,"r");
 
-    static char tempChar;
+    if(tempFile == NULL)
+        return 0;
+
+    &f->file = tempFile;
+
+    char tempChar;
     /* Count number of characters in the file */
     for(charCount = 0; fscanf(file ,"%c",&tempChar) != EOF; charCount++);
 
-    *filedata = (char*)malloc(charCount);
+    *filedata = (char*)malloc(charCount+1);
 
     freopen(filename, "r", file); /* reopen to restart to read */
 

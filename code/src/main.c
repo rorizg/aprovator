@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "../include/files.h"
+#include "../include/database.h"
 
 void main(void){
 
@@ -18,14 +18,14 @@ void main(void){
         printf("%s", filenames[i]);
 	}
 */
-    char *data;
-    UINT32 count, i;
 
-    count = loadFile(DB_HEADER_NAME, &data);
+    char **filenames;
+    UINT32 amount, i;
 
-    for(i = 0; i < count; i++){
-    printf("%c", data[i]);
+    amount = searchForDataBase(&filenames);
+
+    for(i = 0 ; i < amount ; i++){
+        printf("%s\n", filenames+i);
     }
-
 
 }
